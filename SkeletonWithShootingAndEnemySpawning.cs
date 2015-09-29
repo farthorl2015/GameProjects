@@ -160,7 +160,7 @@ class SpaceInvaders
         for (int i = 0; i < spawningCount; i++)
         {
             int spawningWidth = generator.Next(0, FieldWidth);
-            int spawningHeight = generator.Next(0, MaxHeight / 4);
+            int spawningHeight = 0;// generator.Next(0, MaxHeight / 4);
             enemies.Add(new int[] { spawningWidth , spawningHeight });
         }                
     }

@@ -1,1 +1,6 @@
 D:\GitHub\GameProjects-master\GameProjects\trunk\GameWithStructures\bin\Debug\GameWithStructures.exe.config
+C:\Users\bacuty\Documents\GitHub\GameProjects\GameWithStructures\bin\Debug\GameWithStructures.exe.config
+C:\Users\bacuty\Documents\GitHub\GameProjects\GameWithStructures\bin\Debug\GameWithStructures.exe
+C:\Users\bacuty\Documents\GitHub\GameProjects\GameWithStructures\bin\Debug\GameWithStructures.pdb
+C:\Users\bacuty\Documents\GitHub\GameProjects\GameWithStructures\obj\Debug\GameWithStructures.exe
+C:\Users\bacuty\Documents\GitHub\GameProjects\GameWithStructures\obj\Debug\GameWithStructures.pdb
