@@ -17,23 +17,35 @@ class SpaceInvaders
     private static char playerSymbol = 'W'; // it looks the most as a spaceship to me
     private static char enemySymbol = '*'; // looks the angriest
     private static char shotSymbol = '|'; // just random shots
-
+    //Level details
     static int level = 1;
-    static int PauseDivider =16;//changing count of enemies depending on level;
+    static int NumberOfLevels = 3;
+    static int PauseDivider = 16;//changing count of enemies depending on level;
     static int lives = 3;
     static int pause = 0; // here I am adjusting the enemies being spawn because there were too many.
     static int winnedScoresInLevel = 0;//counting points at each level
-    static int scoresToWin = 5;// the count of scores that are needed to go to next level
+    static int scoresToWin = 1;// the count of scores that are needed to go to next level
     static Random generator = new Random(); // this is the generator for the starting position of the enemies.
 
     //bool values for wining game and level;
     static bool wonLevel = false;
+
+
+
+
     static void Main()
     {
         // I set the size of the Console it can be changed easily from the constants above
         Console.BufferHeight = Console.WindowHeight = MaxHeight;
         Console.BufferWidth = Console.WindowWidth = MaxWidth;
+        PlayingLevel(level);// using param level as flag to change difficulty;
+    }
 
+
+
+
+    static void PlayingLevel(int level)
+    {
         while (lives > 0)
         {
             // Draw
@@ -41,68 +53,94 @@ class SpaceInvaders
             DrawResultTable();
             // I moved the spawning of the enemies outside the keyavailable loop because otherwise not a single enemy is spawn if you don't click a button.
             //  FieldBarrier();
-          SpawnEnemies();
+            SpawnEnemies();
             // Logic
-          while (Console.KeyAvailable)
-          {
-              var keyPressed = Console.ReadKey(true);
-              if (keyPressed.Key == ConsoleKey.RightArrow)
-              {
-                  if (PlayerPositionX < FieldWidth)
-                  {
-                      PlayerPositionX++;
-                  }
-              }
-              if (keyPressed.Key == ConsoleKey.LeftArrow)
-              {
-                  if (PlayerPositionX > 0)
-                  {
-                      PlayerPositionX--;
-                  }
-              }
-              if (keyPressed.Key == ConsoleKey.DownArrow)
-              {
-                  if (PlayerPositionY < MaxHeight - 2)
-                  {
-                      PlayerPositionY++;
-                  }
-              }
-              if (keyPressed.Key == ConsoleKey.UpArrow)
-              {
-                  if (PlayerPositionY > 1)
-                  {
-                      PlayerPositionY--;
-                  }
-              }
-              if (keyPressed.Key == ConsoleKey.Spacebar)
-              {
-                  shots.Add(new int[] { PlayerPositionX, PlayerPositionY });
-              }
-          }     
+
+            while (Console.KeyAvailable)
+            {
+                var keyPressed = Console.ReadKey(true);
+                if (keyPressed.Key == ConsoleKey.RightArrow)
+                {
+                    if (PlayerPositionX < FieldWidth)
+                    {
+                        PlayerPositionX++;
+                    }
+                }
+                if (keyPressed.Key == ConsoleKey.LeftArrow)
+                {
+                    if (PlayerPositionX > 0)
+                    {
+                        PlayerPositionX--;
+                    }
+                }
+                if (keyPressed.Key == ConsoleKey.DownArrow)
+                {
+                    if (PlayerPositionY < MaxHeight - 2)
+                    {
+                        PlayerPositionY++;
+                    }
+                }
+                if (keyPressed.Key == ConsoleKey.UpArrow)
+                {
+                    if (PlayerPositionY > 1)
+                    {
+                        PlayerPositionY--;
+                    }
+                }
+                if (keyPressed.Key == ConsoleKey.Spacebar)
+                {
+                    shots.Add(new int[] { PlayerPositionX, PlayerPositionY });
+                }
+            }
             UpdatingShotPosition(); // I did the updating of position in this because otherwise if both updates of the position are in one method when the enemy is at a odd Y position and we shoot(our shoot is alway even Y position) they just pass through each other.
             Collision();
             UpdatingEnemyPosition();
             Collision();
-            CheckScores();
+
             Thread.Sleep(100); // decide how much do you want to slow the game. // 200 was too slow for me
-            wonLevel = CheckScores();
-            
+
+
             //Clear. We need to think of an way to clear withour clearing the barrier because right now if we slow the game a little bit more and the barrier will start to flicker.
             Console.Clear();
+            wonLevel = winnedScoresInLevel >= scoresToWin;
+            if (wonLevel)
+            {
+                level++; 
+                GoToNextLevel();
+                break;
+            }
         }
-       
+
+    }
+    static void GoToNextLevel()
+    {
+        
+        if (level > NumberOfLevels)
+        {
+            Console.WriteLine("You won the whole game!!!");
+           // ConfigurateLevelDetails(1); TO DO
+        }
+        else
+        {
+            Console.WriteLine("Press enter to go to next level");//May be more.. beautiful
+            var keyPressed = Console.ReadKey();
+            if (keyPressed.Key == ConsoleKey.Enter)
+            {
+                Console.Clear();
+                winnedScoresInLevel = 0;
+                wonLevel = false;
+               //ConfigurateLevelDetails(level); Uncomment after implementation
+                PlayingLevel(level);
+            }
+        }
     }
 
-    private static bool CheckScores()
+    private static void ConfigurateLevelDetails(int p)
     {
-        bool wonLevel = false;
-        if (winnedScoresInLevel >= scoresToWin)
-        {
-            level++;
-            wonLevel = true;
-        }
-        return wonLevel;
+        //Setting all values for the start of the next level;
+        enemies.Clear();
     }
+
 
     private static void UpdatingShotPosition()
     {
@@ -171,7 +209,7 @@ class SpaceInvaders
                 shotsToRemove.Add(i);
                 winnedScoresInLevel++;
             }
-            
+
         }
     }
 
@@ -184,7 +222,7 @@ class SpaceInvaders
             lives--;
             enemiesToRemove.Add(enemyHitPlayer);
         }
-        int EnemyPassingBorder = enemies.FindIndex(enemy => enemy[1]>=MaxHeight-2);
+        int EnemyPassingBorder = enemies.FindIndex(enemy => enemy[1] >= MaxHeight - 2);
         if (EnemyPassingBorder >= 0)
         {
             lives--;
@@ -235,7 +273,7 @@ class SpaceInvaders
     {
         foreach (var enemy in enemies)
         {
-            DrawAtCoordinates(new[] { enemy[0], enemy[1] }, ConsoleColor. Red, enemySymbol);
+            DrawAtCoordinates(new[] { enemy[0], enemy[1] }, ConsoleColor.Red, enemySymbol);
         }
     }
     private static void DrawAtCoordinates(int[] objectPostion, ConsoleColor objectColor, char objectSymbol)
@@ -246,8 +284,8 @@ class SpaceInvaders
         Console.CursorVisible = false;
     }
     private static void SpawnEnemies()
-    {       
-        if (pause % PauseDivider  == 0)
+    {
+        if (pause % PauseDivider == 0)
         {
             int spawningWidth = generator.Next(0, FieldWidth);
             int spawningHeight = generator.Next(0, MaxHeight / 6);
@@ -257,4 +295,3 @@ class SpaceInvaders
         pause++;
     }
 }
-  
