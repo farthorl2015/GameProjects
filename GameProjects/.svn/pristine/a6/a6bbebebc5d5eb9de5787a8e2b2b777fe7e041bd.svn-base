@@ -7,7 +7,7 @@ class SpaceInvaders
     // here are all variables that we need to be used more often in both the Main and the additional methods.
     private const int MaxHeight = 30;
     private const int MaxWidth = 70;
-    private const int FieldWidth = MaxWidth / 6; // I made the field smaller because otherwise you cannot catch all the enemies.
+    private const int FieldWidth = MaxWidth / 3; // I made the field smaller because otherwise you cannot catch all the enemies.
 
     private static int PlayerPositionX = FieldWidth / 2;
     private static int PlayerPositionY = MaxHeight - 2;
@@ -15,10 +15,9 @@ class SpaceInvaders
     static List<int[]> shots = new List<int[]>();
 
     private static char playerSymbol = 'W'; // it looks the most as a spaceship to me
-    private static char enemySymbol = '*'; // looks the angriest
-    private static char shotSymbol = '|'; // just random shots
+    private static char enemySymbol = '@'; // looks the angriest
+    private static char shotSymbol = ':'; // just random shots
 
-    static int lives = 3;
     static int pause = 0; // here I am adjusting the enemies being spawn because there were too many.
     static Random generator = new Random(); // this is the generator for the starting position of the enemies.
 
@@ -28,19 +27,20 @@ class SpaceInvaders
         Console.BufferHeight = Console.WindowHeight = MaxHeight;
         Console.BufferWidth = Console.WindowWidth = MaxWidth;
 
+        int lives = 3;
+
         while (lives > 0)
         {
             // Draw
-            
             DrawField();
             DrawResultTable();
-                // I moved the spawning of the enemies outside the keyavailable loop because otherwise not a single enemy is spawn if you don't click a button.
-            //  FieldBarrier();
-          SpawnEnemies();
+            SpawnEnemies();    // I moved the spawning of the enemies outside the keyavailable loop because otherwise not a single enemy is spawn if you don't click a button.
+            FieldBarrier();
+
             // Logic
             while (Console.KeyAvailable)
             {
-                var keyPressed = Console.ReadKey(true);
+                var keyPressed = Console.ReadKey();
                 if (keyPressed.Key == ConsoleKey.RightArrow)
                 {
                     if (PlayerPositionX < FieldWidth)
@@ -50,7 +50,7 @@ class SpaceInvaders
                 }
                 if (keyPressed.Key == ConsoleKey.LeftArrow)
                 {
-                    if (PlayerPositionX > 0)
+                    if (PlayerPositionX > 1)
                     {
                         PlayerPositionX--;
                     }
@@ -74,96 +74,11 @@ class SpaceInvaders
                     shots.Add(new int[] { PlayerPositionX, PlayerPositionY });
                 }
             }
-            UpdatingShotPosition(); // I did the updating of position in this because otherwise if both updates of the position are in one method when the enemy is at a odd Y position and we shoot(our shoot is alway even Y position) they just pass through each other.
-            Collision();
-            UpdatingEnemyPosition();
-            Collision();
-            Thread.Sleep(100); // decide how much do you want to slow the game. // 200 was too slow for me
-            //Clear. We need to think of an way to clear withour clearing the barrier because right now if we slow the game a little bit more and the barrier will start to flicker.
+
+            Thread.Sleep(50); // decide how much do you want to slow the game. // 200 was too slow for me
+            //Clear. If the console is not cleared the object will be drawn multiple times and it will looks like there is no movement. We need to think of an way to clear withour clearing the barrier because right now if we slow the game a little bit more and the barrier will start to flicker.
             Console.Clear();
         }
-    }
-
-    private static void UpdatingShotPosition()
-    {
-        shots.ForEach(shot => shot[1]--);
-    }
-
-    private static void UpdatingEnemyPosition()
-    {
-        enemies.ForEach(enemy => enemy[1]++);
-    }
-
-    private static void Collision()
-    {
-        List<int> enemiesToRemove = new List<int>();
-        List<int> shotsToRemove = new List<int>();
-        List<int[]> enemiesLeft = new List<int[]>();
-        List<int[]> shotsLeft = new List<int[]>();
-        EnemiesVsPlayer(enemiesToRemove);
-        EnemiesVsShots(enemiesToRemove, shotsToRemove);
-        UpdatingTheEnemies(enemiesLeft, enemiesToRemove); // here we're getting the new list of enemies after the collision
-        UpdatingTheShots(shotsLeft, shotsToRemove);
-        shots = shotsLeft;
-        enemies = enemiesLeft;
-    }
-
-    private static void UpdatingTheShots(List<int[]> shotsLeft, List<int> shotsToRemove)
-    {
-        for (int i = 0; i < shots.Count; i++)
-        {
-            if (shotsToRemove.Contains(i))
-            {
-                continue;
-            }
-            if (shots[i][1] < 1)
-            {
-                continue;
-            }
-            shotsLeft.Add(shots[i]);
-        }
-    }
-
-    private static void UpdatingTheEnemies(List<int[]> enemiesLeft, List<int> enemiesToRemove)
-    {
-        for (int i = 0; i < enemies.Count; i++)
-        {
-            if (enemiesToRemove.Contains(i))
-            {
-                continue;
-            }
-            if (enemies[i][1] > MaxHeight - 2)
-            {
-                continue;
-            }
-            enemiesLeft.Add(enemies[i]);
-        }
-    }
-
-    private static void EnemiesVsShots(List<int> enemiesToRemove, List<int> shotsToRemove)
-    {
-        for (int i = 0; i < shots.Count; i++)
-        {
-            int theEnemyCollidedWithAShot = enemies.FindIndex(enemy => enemy[0] == shots[i][0] && enemy[1] == shots[i][1]);
-            if (theEnemyCollidedWithAShot >= 0)
-            {
-                enemiesToRemove.Add(theEnemyCollidedWithAShot);
-                shotsToRemove.Add(i);
-            }
-        }
-    }
-
-    private static void EnemiesVsPlayer(List<int> enemiesToRemove)
-    {
-        int enemyHitPlayer = enemies.FindIndex(enemy => enemy[0] == PlayerPositionX && enemy[1] == PlayerPositionY);
-        // if there is no such enemy enemyHit is -1 and so the condition is:
-        if (enemyHitPlayer >= 0)
-        {
-            lives--;
-            enemiesToRemove.Add(enemyHitPlayer);
-        }
-
-
     }
 
 
@@ -198,17 +113,25 @@ class SpaceInvaders
 
     private static void DrawShots()
     {
+        // TODO. When it gets outside the field we need to remove it from the list not just made it hidden, because the list will become enormously big. 
         foreach (var shot in shots)
         {
             DrawAtCoordinates(new[] { shot[0], shot[1] }, ConsoleColor.DarkBlue, shotSymbol);
+            shot[1]--;
         }
     }
 
     private static void DrawEnemies()
     {
+        // TODO They start from the top position and going downwards so their PostitionY++; 
         foreach (var enemy in enemies)
         {
-            DrawAtCoordinates(new[] { enemy[0], enemy[1] }, ConsoleColor.DarkRed, enemySymbol);
+            // I changed the drewing of the enemies to remove the flickering. There is a drawAtCoordinates method which is handling all the drawing. So use it don't repeat the code everywhere.
+            if (enemy[1] != MaxHeight - 1)
+            {
+                DrawAtCoordinates(new[] { enemy[0], enemy[1] }, ConsoleColor.DarkRed, enemySymbol);
+                enemy[1]++;
+            }
         }
     }
     private static void DrawAtCoordinates(int[] objectPostion, ConsoleColor objectColor, char objectSymbol)
@@ -219,8 +142,9 @@ class SpaceInvaders
         Console.CursorVisible = false;
     }
     private static void SpawnEnemies()
-    {       
-        if (pause % 14 == 0)
+    {
+        // I made the enemies less because there were just too man to handle and also made them spawn from the higher because some of the enemies spawned at the center
+        if (pause % 4 == 0)
         {
             int spawningWidth = generator.Next(0, FieldWidth);
             int spawningHeight = generator.Next(0, MaxHeight / 6);

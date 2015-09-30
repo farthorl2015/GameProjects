@@ -1,0 +1,12 @@
+C:\Users\Simooo\Desktop\GameProjects\SpaceInvaders\bin\Debug\SpaceInvaders.exe
+C:\Users\Simooo\Desktop\GameProjects\SpaceInvaders\bin\Debug\SpaceInvaders.pdb
+C:\Users\Simooo\Desktop\GameProjects\SpaceInvaders\obj\Debug\SpaceInvaders.csprojResolveAssemblyReference.cache
+C:\Users\Simooo\Desktop\GameProjects\SpaceInvaders\obj\Debug\SpaceInvaders.exe
+C:\Users\Simooo\Desktop\GameProjects\SpaceInvaders\obj\Debug\SpaceInvaders.pdb
+D:\GitHub\GameProjects-master\GameProjects\trunk\SpaceInvaders\obj\Debug\SpaceInvaders.exe
+D:\GitHub\GameProjects-master\GameProjects\trunk\SpaceInvaders\obj\Debug\SpaceInvaders.pdb
+C:\Users\Simooo\Desktop\GameProjects\GameProjects\trunk\SpaceInvaders\obj\Debug\SpaceInvaders.exe
+C:\Users\Simooo\Desktop\GameProjects\GameProjects\trunk\SpaceInvaders\obj\Debug\SpaceInvaders.pdb
+C:\Users\Simooo\Desktop\GameProjects\GameProjects\trunk\SpaceInvaders\bin\Debug\SpaceInvaders.exe
+C:\Users\Simooo\Desktop\GameProjects\GameProjects\trunk\SpaceInvaders\bin\Debug\SpaceInvaders.pdb
+C:\Users\Simooo\Desktop\GameProjects\GameProjects\trunk\SpaceInvaders\obj\Debug\SpaceInvaders.csprojResolveAssemblyReference.cache
