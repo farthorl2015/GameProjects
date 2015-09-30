@@ -4,3 +4,4 @@ C:\Users\bacuty\Documents\GitHub\GameProjects\GameWithStructures\bin\Debug\GameW
 C:\Users\bacuty\Documents\GitHub\GameProjects\GameWithStructures\bin\Debug\GameWithStructures.pdb
 C:\Users\bacuty\Documents\GitHub\GameProjects\GameWithStructures\obj\Debug\GameWithStructures.exe
 C:\Users\bacuty\Documents\GitHub\GameProjects\GameWithStructures\obj\Debug\GameWithStructures.pdb
+C:\Users\bacuty\Documents\GitHub\GameProjects\GameWithStructures\obj\Debug\GameWithStructures.csprojResolveAssemblyReference.cache
