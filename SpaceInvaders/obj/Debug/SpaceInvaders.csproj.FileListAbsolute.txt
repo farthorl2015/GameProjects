@@ -10,3 +10,8 @@ C:\Users\bacuty\Documents\GitHub\GameProjects\SpaceInvaders\obj\Debug\SpaceInvad
 C:\Users\bacuty\Documents\GitHub\GameProjects\SpaceInvaders\bin\Debug\SpaceInvaders.exe
 C:\Users\bacuty\Documents\GitHub\GameProjects\SpaceInvaders\bin\Debug\SpaceInvaders.pdb
 C:\Users\bacuty\Documents\GitHub\GameProjects\SpaceInvaders\obj\Debug\SpaceInvaders.csprojResolveAssemblyReference.cache
+D:\TeamWork\GameProjects\SpaceInvaders\obj\Debug\SpaceInvaders.exe
+D:\TeamWork\GameProjects\SpaceInvaders\obj\Debug\SpaceInvaders.pdb
+D:\TeamWork\GameProjects\SpaceInvaders\obj\Debug\SpaceInvaders.csprojResolveAssemblyReference.cache
+D:\TeamWork\GameProjects\SpaceInvaders\bin\Debug\SpaceInvaders.exe
+D:\TeamWork\GameProjects\SpaceInvaders\bin\Debug\SpaceInvaders.pdb

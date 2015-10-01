@@ -36,6 +36,7 @@ class SpaceInvaders
 
     static void Main()
     {
+        Console.Title = "!---> Space Invaders <---!"; //sets the title to display in the console bar
         // I set the size of the Console it can be changed easily from the constants above
         Console.BufferHeight = Console.WindowHeight = MaxHeight;
         Console.BufferWidth = Console.WindowWidth = MaxWidth;
@@ -61,28 +62,34 @@ class SpaceInvaders
             while (Console.KeyAvailable)
             {
                 var keyPressed = Console.ReadKey(true);
-                if (keyPressed.Key == ConsoleKey.RightArrow)
+
+                while (Console.KeyAvailable) //cleans read key buffer when a lot of keys are pressed
+                {
+                    Console.ReadKey(true);
+                }
+
+                if (keyPressed.Key == ConsoleKey.RightArrow || keyPressed.Key == ConsoleKey.D)
                 {
                     if (PlayerPositionX < FieldWidth)
                     {
                         PlayerPositionX++;
                     }
                 }
-                else if (keyPressed.Key == ConsoleKey.LeftArrow)
+                else if (keyPressed.Key == ConsoleKey.LeftArrow || keyPressed.Key == ConsoleKey.A)
                 {
                     if (PlayerPositionX > 0)
                     {
                         PlayerPositionX--;
                     }
                 }
-                else if (keyPressed.Key == ConsoleKey.DownArrow)
+                else if (keyPressed.Key == ConsoleKey.DownArrow || keyPressed.Key == ConsoleKey.S)
                 {
                     if (PlayerPositionY < MaxHeight - 2)
                     {
                         PlayerPositionY++;
                     }
                 }
-                else if (keyPressed.Key == ConsoleKey.UpArrow)
+                else if (keyPressed.Key == ConsoleKey.UpArrow || keyPressed.Key == ConsoleKey.W)
                 {
                     if (PlayerPositionY > 1)
                     {
