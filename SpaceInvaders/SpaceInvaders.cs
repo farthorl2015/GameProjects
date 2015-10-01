@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 
 class SpaceInvaders
@@ -18,19 +19,19 @@ class SpaceInvaders
     private static char enemySymbol = '*'; // looks the angriest
     private static char shotSymbol = '|'; // just random shots
     //Level details
-    static int level = 1;
-    static int NumberOfLevels = 3;
-    static int PauseDivider = 16;//changing count of enemies depending on level;
-    static int lives = 3;
-    static int pause = 0; // here I am adjusting the enemies being spawn because there were too many.
-    static int winnedScoresInLevel = 0;//counting points at each level
-    static int scoresToWin = 1;// the count of scores that are needed to go to next level
-    static Random generator = new Random(); // this is the generator for the starting position of the enemies.
+    private static int level = 1;
+    private static int NumberOfLevels = 3;
+    private static int PauseDivider = 16;//changing count of enemies depending on level;
+    private static int lives = 3;
+    private static int pause = 0; // here I am adjusting the enemies being spawn because there were too many.
+    private static int winnedScoresInLevel = 0;//counting points at each level
+    private static int scoresToWin = 10;// the count of scores that are needed to go to next level
+    private static Random generator = new Random(); // this is the generator for the starting position of the enemies.
 
     //bool values for wining game and level;
     static bool wonLevel = false;
-
-
+    private static int sleepingParameter = 100;
+    private static bool frozen = false;
 
 
     static void Main()
@@ -46,6 +47,7 @@ class SpaceInvaders
 
     static void PlayingLevel(int level)
     {
+        bool frozenUsed = false;
         while (lives > 0)
         {
             // Draw
@@ -53,7 +55,7 @@ class SpaceInvaders
             DrawResultTable();
             // I moved the spawning of the enemies outside the keyavailable loop because otherwise not a single enemy is spawn if you don't click a button.
             //  FieldBarrier();
-            SpawnEnemies();
+            SpawnEnemies(frozen);
             // Logic
 
             while (Console.KeyAvailable)
@@ -66,38 +68,50 @@ class SpaceInvaders
                         PlayerPositionX++;
                     }
                 }
-                if (keyPressed.Key == ConsoleKey.LeftArrow)
+                else if (keyPressed.Key == ConsoleKey.LeftArrow)
                 {
                     if (PlayerPositionX > 0)
                     {
                         PlayerPositionX--;
                     }
                 }
-                if (keyPressed.Key == ConsoleKey.DownArrow)
+                else if (keyPressed.Key == ConsoleKey.DownArrow)
                 {
                     if (PlayerPositionY < MaxHeight - 2)
                     {
                         PlayerPositionY++;
                     }
                 }
-                if (keyPressed.Key == ConsoleKey.UpArrow)
+                else if (keyPressed.Key == ConsoleKey.UpArrow)
                 {
                     if (PlayerPositionY > 1)
                     {
                         PlayerPositionY--;
                     }
                 }
-                if (keyPressed.Key == ConsoleKey.Spacebar)
+                else if (keyPressed.Key == ConsoleKey.Spacebar)
                 {
                     shots.Add(new int[] { PlayerPositionX, PlayerPositionY });
+                }
+                else if (keyPressed.Key == ConsoleKey.NumPad0)
+                {
+                    if (!frozenUsed)
+                    {
+                        Thread freeze = new Thread(Freeze());
+                        freeze.Start();
+                    }
+                    frozenUsed = true;
                 }
             }
             UpdatingShotPosition(); // I did the updating of position in this because otherwise if both updates of the position are in one method when the enemy is at a odd Y position and we shoot(our shoot is alway even Y position) they just pass through each other.
             Collision();
-            UpdatingEnemyPosition();
-            Collision();
-
-            Thread.Sleep(100); // decide how much do you want to slow the game. // 200 was too slow for me
+            if (!frozen)
+            {
+                UpdatingEnemyPosition();
+                Collision();
+            }
+            
+            Thread.Sleep(sleepingParameter); // decide how much do you want to slow the game. // 200 was too slow for me
 
 
             //Clear. We need to think of an way to clear withour clearing the barrier because right now if we slow the game a little bit more and the barrier will start to flicker.
@@ -107,11 +121,28 @@ class SpaceInvaders
             {
                 level++; 
                 GoToNextLevel();
-                break;
+                
             }
         }
 
     }
+
+    private static ThreadStart Freeze()
+    {
+       ThreadStart freeze = () =>
+        {
+            Stopwatch sb = new Stopwatch();
+            int millieSecondsOfFreeze = 4000;
+            sb.Start();
+            while (sb.ElapsedMilliseconds < millieSecondsOfFreeze)
+            {
+                frozen = true;
+            }
+            frozen = false;
+        };
+        return freeze;
+    }
+
     static void GoToNextLevel()
     {
         
@@ -129,16 +160,22 @@ class SpaceInvaders
                 Console.Clear();
                 winnedScoresInLevel = 0;
                 wonLevel = false;
-               //ConfigurateLevelDetails(level); Uncomment after implementation
+                ConfigurateLevelDetails();
                 PlayingLevel(level);
             }
         }
     }
 
-    private static void ConfigurateLevelDetails(int p)
+    private static void ConfigurateLevelDetails()
     {
         //Setting all values for the start of the next level;
         enemies.Clear();
+        shots.Clear();
+        PlayerPositionX = FieldWidth/2;
+        PlayerPositionY = MaxHeight - 2;
+        PauseDivider -= 2;
+        sleepingParameter -= 10;
+        lives++;
     }
 
 
@@ -189,11 +226,7 @@ class SpaceInvaders
             if (enemiesToRemove.Contains(i))
             {
                 continue;
-            }
-            if (enemies[i][1] > MaxHeight - 2)
-            {
-                continue;
-            }
+            }            
             enemiesLeft.Add(enemies[i]);
         }
     }
@@ -222,11 +255,11 @@ class SpaceInvaders
             lives--;
             enemiesToRemove.Add(enemyHitPlayer);
         }
-        int EnemyPassingBorder = enemies.FindIndex(enemy => enemy[1] >= MaxHeight - 2);
-        if (EnemyPassingBorder >= 0)
+        int enemyPassingBorder = enemies.FindIndex(enemy => enemy[1] >= MaxHeight - 2);
+        if (enemyPassingBorder >= 0)
         {
             lives--;
-            enemiesToRemove.Add(EnemyPassingBorder);
+            enemiesToRemove.Add(enemyPassingBorder);
         }
 
     }
@@ -283,15 +316,19 @@ class SpaceInvaders
         Console.WriteLine(objectSymbol);
         Console.CursorVisible = false;
     }
-    private static void SpawnEnemies()
+    private static void SpawnEnemies(bool frozen)
     {
-        if (pause % PauseDivider == 0)
+        if (!frozen)
         {
-            int spawningWidth = generator.Next(0, FieldWidth);
-            int spawningHeight = generator.Next(0, MaxHeight / 6);
-            enemies.Add(new int[] { spawningWidth, spawningHeight });
-            pause = 0;
+            if (pause % PauseDivider == 0)
+            {
+                int spawningWidth = generator.Next(0, FieldWidth);
+                int spawningHeight = generator.Next(0, MaxHeight / 6);
+                enemies.Add(new int[] { spawningWidth, spawningHeight });
+                pause = 0;
+            }
+            pause++;
         }
-        pause++;
+        
     }
 }
