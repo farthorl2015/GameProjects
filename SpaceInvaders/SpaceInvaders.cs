@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Threading;
 
 class SpaceInvaders
@@ -18,18 +19,18 @@ class SpaceInvaders
     private static char playerSymbol = 'W'; // it looks the most as a spaceship to me
     private static char enemySymbol = '*'; // looks the angriest
     private static char shotSymbol = '|'; // just random shots
+
     //Level details
-    private static int level = 1;
-    private static int NumberOfLevels = 3;
     private static int PauseDivider = 16;//changing count of enemies depending on level;
     private static int lives = 3;
-    private static int pause = 0; // here I am adjusting the enemies being spawn because there were too many.
-    private static int winnedScoresInLevel = 0;//counting points at each level
+    private static int pause; // here I am adjusting the enemies being spawn because there were too many.
+    private static int winnedScoresInLevel;//counting points at each level
     private static int scoresToWin = 10;// the count of scores that are needed to go to next level
     private static Random generator = new Random(); // this is the generator for the starting position of the enemies.
 
+    private static bool wonLevel = false;
     //bool values for wining game and level;
-    static bool wonLevel = false;
+
     private static int sleepingParameter = 100;
     private static bool frozen = false;
 
@@ -39,25 +40,27 @@ class SpaceInvaders
         // I set the size of the Console it can be changed easily from the constants above
         Console.BufferHeight = Console.WindowHeight = MaxHeight;
         Console.BufferWidth = Console.WindowWidth = MaxWidth;
-        PlayingLevel(level);// using param level as flag to change difficulty;
+        PlayingLevel();// using param level as flag to change difficulty;
     }
 
 
 
 
-    static void PlayingLevel(int level)
+    static void PlayingLevel()
     {
+        int level = 1;
+        int numberOfLevels = 3;
+
         bool frozenUsed = false;
         while (lives > 0)
         {
             // Draw
-            DrawField();
-            DrawResultTable();
-            // I moved the spawning of the enemies outside the keyavailable loop because otherwise not a single enemy is spawn if you don't click a button.
-            //  FieldBarrier();
             SpawnEnemies(frozen);
-            // Logic
+            DrawField();
+            DrawResultTable(level);
+            FieldBarrier();
 
+            // Logic
             while (Console.KeyAvailable)
             {
                 var keyPressed = Console.ReadKey(true);
@@ -110,59 +113,68 @@ class SpaceInvaders
                 UpdatingEnemyPosition();
                 Collision();
             }
-            
+
             Thread.Sleep(sleepingParameter); // decide how much do you want to slow the game. // 200 was too slow for me
 
 
             //Clear. We need to think of an way to clear withour clearing the barrier because right now if we slow the game a little bit more and the barrier will start to flicker.
             Console.Clear();
+
+            DrawField();
+            DrawResultTable(level);
+            FieldBarrier();
             wonLevel = winnedScoresInLevel >= scoresToWin;
             if (wonLevel)
             {
-                level++; 
-                GoToNextLevel();
+                level++;
+                GoToNextLevel(level, numberOfLevels);
+
+            }
+        }
+        PrintStringAtCoordinates(MaxWidth / 2, MaxHeight / 2, ConsoleColor.DarkRed, "YOU LOSE!!!");
+        while (true)
+        {
+            var exitButton = Console.ReadKey();
+            PrintStringAtCoordinates(MaxWidth / 2, MaxHeight / 2, ConsoleColor.DarkRed, "Press enter to exit!!!");
+            if (exitButton.Key == ConsoleKey.Enter)
+            {
                 
             }
-        }
-
+        }   
     }
 
-    private static ThreadStart Freeze()
+    
+
+    static void GoToNextLevel(int level, int numberOfLevels)
     {
-       ThreadStart freeze = () =>
+
+        if (level > numberOfLevels)
         {
-            Stopwatch sb = new Stopwatch();
-            int millieSecondsOfFreeze = 4000;
-            sb.Start();
-            while (sb.ElapsedMilliseconds < millieSecondsOfFreeze)
+
+            PrintStringAtCoordinates(MaxHeight/2, FieldWidth/2, ConsoleColor.DarkBlue, "YOU WON!!!");
+
+            while (true)
             {
-                frozen = true;
+                Environment.Exit(Environment.ExitCode);
             }
-            frozen = false;
-        };
-        return freeze;
-    }
 
-    static void GoToNextLevel()
-    {
-        
-        if (level > NumberOfLevels)
-        {
-            Console.WriteLine("You won the whole game!!!");
-           // ConfigurateLevelDetails(1); TO DO
         }
-        else
+
+        PrintStringAtCoordinates(20, 7, ConsoleColor.Black, "Press enter to go to next level");//May be more.. beautiful
+        var keyPressed = Console.ReadKey();
+        while (true)
         {
-            Console.WriteLine("Press enter to go to next level");//May be more.. beautiful
-            var keyPressed = Console.ReadKey();
+            keyPressed = Console.ReadKey();
+
             if (keyPressed.Key == ConsoleKey.Enter)
             {
                 Console.Clear();
                 winnedScoresInLevel = 0;
                 wonLevel = false;
                 ConfigurateLevelDetails();
-                PlayingLevel(level);
+                break;
             }
+
         }
     }
 
@@ -171,7 +183,7 @@ class SpaceInvaders
         //Setting all values for the start of the next level;
         enemies.Clear();
         shots.Clear();
-        PlayerPositionX = FieldWidth/2;
+        PlayerPositionX = FieldWidth / 2;
         PlayerPositionY = MaxHeight - 2;
         PauseDivider -= 2;
         sleepingParameter -= 10;
@@ -226,7 +238,7 @@ class SpaceInvaders
             if (enemiesToRemove.Contains(i))
             {
                 continue;
-            }            
+            }
             enemiesLeft.Add(enemies[i]);
         }
     }
@@ -248,33 +260,31 @@ class SpaceInvaders
 
     private static void EnemiesVsPlayer(List<int> enemiesToRemove)
     {
-        int enemyHitPlayer = enemies.FindIndex(enemy => enemy[0] == PlayerPositionX && enemy[1] == PlayerPositionY);
-        // if there is no such enemy enemyHit is -1 and so the condition is:
-        if (enemyHitPlayer >= 0)
+        for (int index = 0; index < enemies.Count; index++)
         {
-            lives--;
-            enemiesToRemove.Add(enemyHitPlayer);
+            if ((enemies[index][0] == PlayerPositionX && enemies[index][1] == PlayerPositionY) || enemies[index][1] >= MaxHeight - 2)
+            {
+                lives--;
+                DrawAtCoordinates(new[] { enemies[index][0], enemies[index][1]}, ConsoleColor.DarkRed, 'X');
+                enemiesToRemove.Add(index);
+            }
+           
         }
-        int enemyPassingBorder = enemies.FindIndex(enemy => enemy[1] >= MaxHeight - 2);
-        if (enemyPassingBorder >= 0)
-        {
-            lives--;
-            enemiesToRemove.Add(enemyPassingBorder);
-        }
-
     }
 
 
-    private static void DrawResultTable()
+    private static void DrawResultTable(int level)
     {
-
-        // TODO all the information we are going to think of.
+        PrintStringAtCoordinates(20,4, ConsoleColor.Black, "SPACE INVADERS");
+        PrintStringAtCoordinates(20, 6, ConsoleColor.Black, string.Format("Lives: {0}", lives));
+        PrintStringAtCoordinates(20, 7, ConsoleColor.Black, string.Format("Level: {0}", level));
+        PrintStringAtCoordinates(20, 8, ConsoleColor.Black, string.Format("Next level after {0} enemies kills", scoresToWin - winnedScoresInLevel));
+       
     }
 
     private static void FieldBarrier()
     {
-        // TODO we need to think of an a way to draw the barrier outside the while and after that we need make a clear method which doesn't remove it
-        for (int i = 0; i < MaxHeight; i++)
+        for (int i = 1; i < MaxHeight - 2; i++)
         {
             DrawAtCoordinates(new int[] { FieldWidth + 1, i }, ConsoleColor.Black, '|');
         }
@@ -309,11 +319,19 @@ class SpaceInvaders
             DrawAtCoordinates(new[] { enemy[0], enemy[1] }, ConsoleColor.Red, enemySymbol);
         }
     }
-    private static void DrawAtCoordinates(int[] objectPostion, ConsoleColor objectColor, char objectSymbol)
+    private static void DrawAtCoordinates(int[] objectPosition, ConsoleColor objectColor, char objectSymbol)
     {
-        Console.SetCursorPosition(objectPostion[0], objectPostion[1]);
+        Console.SetCursorPosition(objectPosition[0], objectPosition[1]);
         Console.ForegroundColor = objectColor;
         Console.WriteLine(objectSymbol);
+        Console.CursorVisible = false;
+    }
+
+    private static void PrintStringAtCoordinates(int stringPositionX, int stringPositionY, ConsoleColor stringColor, string message)
+    {
+        Console.SetCursorPosition(stringPositionX, stringPositionY);
+        Console.ForegroundColor = stringColor;
+        Console.WriteLine(message);
         Console.CursorVisible = false;
     }
     private static void SpawnEnemies(bool frozen)
@@ -329,6 +347,21 @@ class SpaceInvaders
             }
             pause++;
         }
-        
+
+    }
+    private static ThreadStart Freeze()
+    {
+        ThreadStart freeze = () =>
+        {
+            Stopwatch sb = new Stopwatch();
+            int millieSecondsOfFreeze = 4000;
+            sb.Start();
+            while (sb.ElapsedMilliseconds < millieSecondsOfFreeze)
+            {
+                frozen = true;
+            }
+            frozen = false;
+        };
+        return freeze;
     }
 }
