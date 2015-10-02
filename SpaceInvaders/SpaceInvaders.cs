@@ -51,9 +51,7 @@ class SpaceInvaders
 
 
     static void PlayingLevel()
-    {
-        
-
+    {        
         bool frozenUsed = false;
         while (lives > 0)
         {
@@ -125,9 +123,10 @@ class SpaceInvaders
 
             Thread.Sleep(sleepingParameter);
             Console.Clear();
-
+            // Redrawing
             DrawField();
             
+            // checking if the 
             wonLevel = winnedScoresInLevel >= scoresToWin;
             if (wonLevel)
             {
