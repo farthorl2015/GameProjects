@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.IO;
 
 class SpaceInvaders
 {
@@ -135,7 +136,9 @@ class SpaceInvaders
 
             }
         }
-        PrintStringAtCoordinates(20, 12, ConsoleColor.Red, "YOU LOSE!!!");
+        
+        WriteLabel(new StreamReader("game_over.txt"));
+        //PrintStringAtCoordinates(20, 12, ConsoleColor.Red, "YOU LOSE!!!");
         Console.ReadLine();
         Environment.Exit(0);
 
@@ -149,7 +152,8 @@ class SpaceInvaders
         if (level > numberOfLevels)
         {
 
-            PrintStringAtCoordinates(20, 12, ConsoleColor.Blue, "YOU WON!!!");
+            WriteLabel(new StreamReader("you_won.txt"));  
+            //PrintStringAtCoordinates(20, 12, ConsoleColor.Blue, "YOU WON!!!");
             Console.ReadLine();
             Environment.Exit(0);           
         }
@@ -359,4 +363,27 @@ class SpaceInvaders
         };
         return freeze;
     }
-}
+    private static void WriteLabel( StreamReader file)//flag
+    {
+        Console.Clear();
+        int y = MaxHeight / 2 - 5;
+        int x= MaxWidth / 5;
+        using(file)
+        {
+            string line;
+            while(true)
+            {
+                line = file.ReadLine();
+                if (string.IsNullOrEmpty(line))
+                {
+                    break;
+                }
+                Console.SetCursorPosition(x, y);
+                Console.WriteLine(line);
+                
+                y++;
+            }
+        }
+    }
+
+ }
