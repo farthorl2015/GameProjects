@@ -138,7 +138,7 @@ class SpaceInvaders
         }
         
         WriteLabel(new StreamReader("game_over.txt"));
-        //PrintStringAtCoordinates(20, 12, ConsoleColor.Red, "YOU LOSE!!!");
+        
         Console.ReadLine();
         Environment.Exit(0);
 
@@ -153,7 +153,7 @@ class SpaceInvaders
         {
 
             WriteLabel(new StreamReader("you_won.txt"));  
-            //PrintStringAtCoordinates(20, 12, ConsoleColor.Blue, "YOU WON!!!");
+            
             Console.ReadLine();
             Environment.Exit(0);           
         }
