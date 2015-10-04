@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Threading;
 using System.IO;
+using System.Threading;
 
 class SpaceInvaders
 {
@@ -102,7 +102,7 @@ class SpaceInvaders
 				}
 				else if (keyPressed.Key == ConsoleKey.Spacebar)
 				{
-					shots.Add(new int[] { playerPositionX, playerPositionY });
+					shots.Add(new[] { playerPositionX, playerPositionY });
 				}
 				else if (keyPressed.Key == ConsoleKey.NumPad0)
 				{
@@ -135,8 +135,7 @@ class SpaceInvaders
 			if (wonLevel)
 			{
 				level++;
-				GoToNextLevel(level, numberOfLevels);
-
+				GoToNextLevel();
 			}
 		}
 
@@ -146,7 +145,7 @@ class SpaceInvaders
 		Environment.Exit(0);
 	}
 
-	static void GoToNextLevel(int level, int numberOfLevels)
+	static void GoToNextLevel()
 	{
 
 		if (level > numberOfLevels)
@@ -159,10 +158,9 @@ class SpaceInvaders
 		}
 
 		PrintStringAtCoordinates(20, 12, Blue, "PRESS ENTER TO GO TO THE NEXT LEVEL");
-		var keyPressed = Console.ReadKey();
 		while (true)
 		{
-			keyPressed = Console.ReadKey();
+			var keyPressed = Console.ReadKey();
 
 			if (keyPressed.Key == ConsoleKey.Enter)
 			{
@@ -172,7 +170,6 @@ class SpaceInvaders
 				ConfigurateLevelDetails();
 				break;
 			}
-
 		}
 	}
 
@@ -283,7 +280,7 @@ class SpaceInvaders
 	{
 		for (int i = 1; i < MaxHeight - 2; i++)
 		{
-			DrawAtCoordinates(new int[] { FieldWidth + 1, i }, Blue, '|');
+			DrawAtCoordinates(new[] { FieldWidth + 1, i }, Blue, '|');
 		}
 	}
 
@@ -367,6 +364,7 @@ class SpaceInvaders
 		Console.Clear();
 		int y = MaxHeight / 2 - 5;
 		int x = MaxWidth / 5;
+
 		using (file)
 		{
 			while (true)
