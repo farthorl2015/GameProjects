@@ -188,9 +188,9 @@ class SpaceInvaders
 	static void DrawResultTable()
 	{
 		PrintStringAtCoordinates(20, 4, ConsoleColor.Blue, "SPACE INVADERS");
-		PrintStringAtCoordinates(20, 6, ConsoleColor.Blue, string.Format("Lives: {0}", lives));
-		PrintStringAtCoordinates(20, 7, ConsoleColor.Blue, string.Format("Level: {0}", level));
-		PrintStringAtCoordinates(20, 8, ConsoleColor.Blue, string.Format("Next level after {0} enemies kills", scoresToWin - winnedScoresInLevel));
+		PrintStringAtCoordinates(20, 6, ConsoleColor.Blue, $"Lives: {lives}");
+		PrintStringAtCoordinates(20, 7, ConsoleColor.Blue, $"Level: {level}");
+		PrintStringAtCoordinates(20, 8, ConsoleColor.Blue, $"Next level after {scoresToWin - winnedScoresInLevel} enemies kills");
 
 	}
 	static void UpdatingShotPosition()
