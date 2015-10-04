@@ -7,36 +7,36 @@ using System.IO;
 class SpaceInvaders
 {
 	// here are all variables that we need to be used more often in both the Main and the additional methods.
-	private const int MaxHeight = 30;
-	private const int MaxWidth = 70;
-	private const int FieldWidth = MaxWidth / 6; // I made the field smaller because otherwise you cannot catch all the enemies.
+	const int MaxHeight = 30;
+	const int MaxWidth = 70;
+	const int FieldWidth = MaxWidth / 6; // I made the field smaller because otherwise you cannot catch all the enemies.
 
-	private static int PlayerPositionX = FieldWidth / 2;
-	private static int PlayerPositionY = MaxHeight - 2;
+	static int PlayerPositionX = FieldWidth / 2;
+	static int PlayerPositionY = MaxHeight - 2;
 
 	static List<int[]> enemies = new List<int[]>(); // the enemies and shots are List because this list holds all the enemies and shots currently on the field so they can drawn. Each enemy and object consists of PositionX and PositionY that is why they are saved in List from int array.
 	static List<int[]> shots = new List<int[]>();
 
-	private static char playerSymbol = 'W'; // it looks the most as a spaceship to me
-	private static char enemySymbol = '@'; // looks the angriest
-	private static char shotSymbol = '|'; // just random shots
+	static char playerSymbol = 'W'; // it looks the most as a spaceship to me
+	static char enemySymbol = '@'; // looks the angriest
+	static char shotSymbol = '|'; // just random shots
 
 	//Level details
-	private static int PauseDivider = 16;//changing count of enemies depending on level;
-	private static int lives = 3;
-	private static int pause; // here I am adjusting the enemies being spawn because there were too many.
-	private static int winnedScoresInLevel;//counting points at each level
-	private static int scoresToWin = 10;// the count of scores that are needed to go to next level
-	private static int level;
-	private static int numberOfLevels = 3;
+	static int PauseDivider = 16;//changing count of enemies depending on level;
+	static int lives = 3;
+	static int pause; // here I am adjusting the enemies being spawn because there were too many.
+	static int winnedScoresInLevel;//counting points at each level
+	static int scoresToWin = 10;// the count of scores that are needed to go to next level
+	static int level;
+	static int numberOfLevels = 3;
 
-	private static Random generator = new Random(); // this is the generator for the starting position of the enemies.
+	static Random generator = new Random(); // this is the generator for the starting position of the enemies.
 
-	private static bool wonLevel = false;
+	static bool wonLevel = false;
 	//bool values for wining game and level;
 
-	private static int sleepingParameter = 100;
-	private static bool enemiesAreFrozen = false;
+	static int sleepingParameter = 100;
+	static bool enemiesAreFrozen = false;
 
 
 	static void Main()
@@ -129,6 +129,7 @@ class SpaceInvaders
 
 			// checking if the 
 			wonLevel = winnedScoresInLevel >= scoresToWin;
+
 			if (wonLevel)
 			{
 				level++;
@@ -141,10 +142,7 @@ class SpaceInvaders
 
 		Console.ReadLine();
 		Environment.Exit(0);
-
 	}
-
-
 
 	static void GoToNextLevel(int level, int numberOfLevels)
 	{
@@ -176,7 +174,7 @@ class SpaceInvaders
 		}
 	}
 
-	private static void ConfigurateLevelDetails()
+	static void ConfigurateLevelDetails()
 	{
 		enemies.Clear();
 		shots.Clear();
@@ -187,7 +185,7 @@ class SpaceInvaders
 		lives++;
 	}
 
-	private static void DrawResultTable()
+	static void DrawResultTable()
 	{
 		PrintStringAtCoordinates(20, 4, ConsoleColor.Blue, "SPACE INVADERS");
 		PrintStringAtCoordinates(20, 6, ConsoleColor.Blue, string.Format("Lives: {0}", lives));
@@ -195,17 +193,17 @@ class SpaceInvaders
 		PrintStringAtCoordinates(20, 8, ConsoleColor.Blue, string.Format("Next level after {0} enemies kills", scoresToWin - winnedScoresInLevel));
 
 	}
-	private static void UpdatingShotPosition()
+	static void UpdatingShotPosition()
 	{
 		shots.ForEach(shot => shot[1]--);
 	}
 
-	private static void UpdatingEnemyPosition()
+	static void UpdatingEnemyPosition()
 	{
 		enemies.ForEach(enemy => enemy[1]++);
 	}
 
-	private static void Collision()
+	static void Collision()
 	{
 		List<int> enemiesToRemove = new List<int>();
 		List<int> shotsToRemove = new List<int>();
@@ -219,7 +217,7 @@ class SpaceInvaders
 		enemies = enemiesLeft;
 	}
 
-	private static void UpdatingTheShotsList(List<int[]> shotsLeft, List<int> shotsToRemove)
+	static void UpdatingTheShotsList(List<int[]> shotsLeft, List<int> shotsToRemove)
 	{
 		for (int i = 0; i < shots.Count; i++)
 		{
@@ -235,7 +233,7 @@ class SpaceInvaders
 		}
 	}
 
-	private static void UpdatingTheEnemiesList(List<int[]> enemiesLeft, List<int> enemiesToRemove)
+	static void UpdatingTheEnemiesList(List<int[]> enemiesLeft, List<int> enemiesToRemove)
 	{
 		for (int i = 0; i < enemies.Count; i++)
 		{
@@ -247,7 +245,7 @@ class SpaceInvaders
 		}
 	}
 
-	private static void EnemiesVsShots(List<int> enemiesToRemove, List<int> shotsToRemove)
+	static void EnemiesVsShots(List<int> enemiesToRemove, List<int> shotsToRemove)
 	{
 		for (int i = 0; i < shots.Count; i++)
 		{
@@ -262,7 +260,7 @@ class SpaceInvaders
 		}
 	}
 
-	private static void EnemiesTakingLife(List<int> enemiesToRemove)
+	static void EnemiesTakingLife(List<int> enemiesToRemove)
 	{
 		for (int index = 0; index < enemies.Count; index++)
 		{
@@ -279,7 +277,7 @@ class SpaceInvaders
 
 
 
-	private static void FieldBarrier()
+	static void FieldBarrier()
 	{
 		for (int i = 1; i < MaxHeight - 2; i++)
 		{
@@ -287,7 +285,7 @@ class SpaceInvaders
 		}
 	}
 
-	private static void DrawField()
+	static void DrawField()
 	{
 		DrawEnemies();
 		DrawShots();
@@ -296,14 +294,14 @@ class SpaceInvaders
 		FieldBarrier();
 	}
 
-	private static void DrawPlayer()
+	static void DrawPlayer()
 	{
 		int[] playerPosition = { PlayerPositionX, PlayerPositionY };
 		ConsoleColor playerColor = ConsoleColor.Blue;
 		DrawAtCoordinates(playerPosition, playerColor, playerSymbol);
 	}
 
-	private static void DrawShots()
+	static void DrawShots()
 	{
 		foreach (var shot in shots)
 		{
@@ -311,14 +309,14 @@ class SpaceInvaders
 		}
 	}
 
-	private static void DrawEnemies()
+	static void DrawEnemies()
 	{
 		foreach (var enemy in enemies)
 		{
 			DrawAtCoordinates(new[] { enemy[0], enemy[1] }, ConsoleColor.Red, enemySymbol);
 		}
 	}
-	private static void DrawAtCoordinates(int[] objectPosition, ConsoleColor objectColor, char objectSymbol)
+	static void DrawAtCoordinates(int[] objectPosition, ConsoleColor objectColor, char objectSymbol)
 	{
 		Console.SetCursorPosition(objectPosition[0], objectPosition[1]);
 		Console.ForegroundColor = objectColor;
@@ -326,14 +324,14 @@ class SpaceInvaders
 		Console.CursorVisible = false;
 	}
 
-	private static void PrintStringAtCoordinates(int stringPositionX, int stringPositionY, ConsoleColor stringColor, string message)
+	static void PrintStringAtCoordinates(int stringPositionX, int stringPositionY, ConsoleColor stringColor, string message)
 	{
 		Console.SetCursorPosition(stringPositionX, stringPositionY);
 		Console.ForegroundColor = stringColor;
 		Console.WriteLine(message);
 		Console.CursorVisible = false;
 	}
-	private static void SpawnEnemies(bool frozen)
+	static void SpawnEnemies(bool frozen)
 	{
 		if (!frozen)
 		{
@@ -348,7 +346,7 @@ class SpaceInvaders
 		}
 
 	}
-	private static ThreadStart Freeze()
+	static ThreadStart Freeze()
 	{
 		ThreadStart freeze = () =>
 		{
@@ -364,7 +362,7 @@ class SpaceInvaders
 		return freeze;
 	}
 
-	private static void WriteLabel(StreamReader file) //flag
+	static void WriteLabel(StreamReader file) //flag
 	{
 		Console.Clear();
 		int y = MaxHeight / 2 - 5;
