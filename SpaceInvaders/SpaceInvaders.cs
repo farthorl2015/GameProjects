@@ -11,20 +11,20 @@ class SpaceInvaders
 	const int MaxWidth = 70;
 	const int FieldWidth = MaxWidth / 6; // I made the field smaller because otherwise you cannot catch all the enemies.
 
-	static int PlayerPositionX = FieldWidth / 2;
-	static int PlayerPositionY = MaxHeight - 2;
+	static int playerPositionX = FieldWidth / 2;
+	static int playerPositionY = MaxHeight - 2;
 
 	static List<int[]> enemies = new List<int[]>(); // the enemies and shots are List because this list holds all the enemies and shots currently on the field so they can drawn. Each enemy and object consists of PositionX and PositionY that is why they are saved in List from int array.
 	static List<int[]> shots = new List<int[]>();
 
-	const char playerSymbol = 'W'; // it looks the most as a spaceship to me
-	const char enemySymbol = '@'; // looks the angriest
-	const char shotSymbol = '|'; // just random shots
+	const char PlayerSymbol = 'W'; // it looks the most as a spaceship to me
+	const char EnemySymbol = '@'; // looks the angriest
+	const char ShotSymbol = '|'; // just random shots
 
 	static readonly ConsoleColor Blue = ConsoleColor.Blue;
 
 	//Level details
-	static int PauseDivider = 16;//changing count of enemies depending on level;
+	static int pauseDivider = 16; //changing count of enemies depending on level;
 	static int lives = 3;
 	static int pause; // here I am adjusting the enemies being spawn because there were too many.
 	static int winnedScoresInLevel;//counting points at each level
@@ -74,35 +74,35 @@ class SpaceInvaders
 
 				if (keyPressed.Key == ConsoleKey.RightArrow || keyPressed.Key == ConsoleKey.D)
 				{
-					if (PlayerPositionX < FieldWidth)
+					if (playerPositionX < FieldWidth)
 					{
-						PlayerPositionX++;
+						playerPositionX++;
 					}
 				}
 				else if (keyPressed.Key == ConsoleKey.LeftArrow || keyPressed.Key == ConsoleKey.A)
 				{
-					if (PlayerPositionX > 0)
+					if (playerPositionX > 0)
 					{
-						PlayerPositionX--;
+						playerPositionX--;
 					}
 				}
 				else if (keyPressed.Key == ConsoleKey.DownArrow || keyPressed.Key == ConsoleKey.S)
 				{
-					if (PlayerPositionY < MaxHeight - 2)
+					if (playerPositionY < MaxHeight - 2)
 					{
-						PlayerPositionY++;
+						playerPositionY++;
 					}
 				}
 				else if (keyPressed.Key == ConsoleKey.UpArrow || keyPressed.Key == ConsoleKey.W)
 				{
-					if (PlayerPositionY > 1)
+					if (playerPositionY > 1)
 					{
-						PlayerPositionY--;
+						playerPositionY--;
 					}
 				}
 				else if (keyPressed.Key == ConsoleKey.Spacebar)
 				{
-					shots.Add(new int[] { PlayerPositionX, PlayerPositionY });
+					shots.Add(new int[] { playerPositionX, playerPositionY });
 				}
 				else if (keyPressed.Key == ConsoleKey.NumPad0)
 				{
@@ -180,9 +180,9 @@ class SpaceInvaders
 	{
 		enemies.Clear();
 		shots.Clear();
-		PlayerPositionX = FieldWidth / 2;
-		PlayerPositionY = MaxHeight - 2;
-		PauseDivider -= 2;
+		playerPositionX = FieldWidth / 2;
+		playerPositionY = MaxHeight - 2;
+		pauseDivider -= 2;
 		sleepingParameter -= 10;
 		lives++;
 	}
@@ -266,7 +266,7 @@ class SpaceInvaders
 	{
 		for (int index = 0; index < enemies.Count; index++)
 		{
-			if ((enemies[index][0] == PlayerPositionX && enemies[index][1] == PlayerPositionY) || enemies[index][1] >= MaxHeight - 2)
+			if ((enemies[index][0] == playerPositionX && enemies[index][1] == playerPositionY) || enemies[index][1] >= MaxHeight - 2)
 			{
 				lives--;
 				DrawAtCoordinates(new[] { enemies[index][0], enemies[index][1] }, ConsoleColor.DarkRed, 'X');
@@ -298,16 +298,16 @@ class SpaceInvaders
 
 	static void DrawPlayer()
 	{
-		int[] playerPosition = { PlayerPositionX, PlayerPositionY };
+		int[] playerPosition = { playerPositionX, playerPositionY };
 		ConsoleColor playerColor = Blue;
-		DrawAtCoordinates(playerPosition, playerColor, playerSymbol);
+		DrawAtCoordinates(playerPosition, playerColor, PlayerSymbol);
 	}
 
 	static void DrawShots()
 	{
 		foreach (var shot in shots)
 		{
-			DrawAtCoordinates(new[] { shot[0], shot[1] }, ConsoleColor.Red, shotSymbol);
+			DrawAtCoordinates(new[] { shot[0], shot[1] }, ConsoleColor.Red, ShotSymbol);
 		}
 	}
 
@@ -315,7 +315,7 @@ class SpaceInvaders
 	{
 		foreach (var enemy in enemies)
 		{
-			DrawAtCoordinates(new[] { enemy[0], enemy[1] }, ConsoleColor.Red, enemySymbol);
+			DrawAtCoordinates(new[] { enemy[0], enemy[1] }, ConsoleColor.Red, EnemySymbol);
 		}
 	}
 	static void DrawAtCoordinates(int[] objectPosition, ConsoleColor objectColor, char objectSymbol)
@@ -337,7 +337,7 @@ class SpaceInvaders
 	{
 		if (!frozen)
 		{
-			if (pause % PauseDivider == 0)
+			if (pause % pauseDivider == 0)
 			{
 				int spawningWidth = generator.Next(0, FieldWidth);
 				int spawningHeight = generator.Next(0, MaxHeight / 6);
@@ -353,9 +353,9 @@ class SpaceInvaders
 		ThreadStart freeze = () =>
 		{
 			Stopwatch sb = new Stopwatch();
-			int millieSecondsOfFreeze = 4000;
+			int millisecondsOfFreeze = 4000;
 			sb.Start();
-			while (sb.ElapsedMilliseconds < millieSecondsOfFreeze)
+			while (sb.ElapsedMilliseconds < millisecondsOfFreeze)
 			{
 				enemiesAreFrozen = true;
 			}
@@ -386,5 +386,4 @@ class SpaceInvaders
 			}
 		}
 	}
-
 }
