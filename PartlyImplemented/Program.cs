@@ -9,7 +9,7 @@ namespace GameSpaceInvaders
     class Program
     {
 
-        const int CountLevels = 4;//read only if the player can customize   
+        const int CountLevels = 4; //read only if the player can customize   
         const string SpaceShip = "_||*-W-||*_";
         static char[][,] levels = new char[CountLevels][,];
         static int rowOfEnemies = 1;

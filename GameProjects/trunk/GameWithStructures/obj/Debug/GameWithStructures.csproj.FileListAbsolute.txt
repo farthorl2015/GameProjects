@@ -1,7 +1,0 @@
-D:\GitHub\GameProjects-master\GameProjects\trunk\GameWithStructures\bin\Debug\GameWithStructures.exe.config
-C:\Users\Simooo\Desktop\GameProjects\GameProjects\trunk\GameWithStructures\bin\Debug\GameWithStructures.exe.config
-C:\Users\Simooo\Desktop\GameProjects\GameProjects\trunk\GameWithStructures\bin\Debug\GameWithStructures.exe
-C:\Users\Simooo\Desktop\GameProjects\GameProjects\trunk\GameWithStructures\bin\Debug\GameWithStructures.pdb
-C:\Users\Simooo\Desktop\GameProjects\GameProjects\trunk\GameWithStructures\obj\Debug\GameWithStructures.csprojResolveAssemblyReference.cache
-C:\Users\Simooo\Desktop\GameProjects\GameProjects\trunk\GameWithStructures\obj\Debug\GameWithStructures.exe
-C:\Users\Simooo\Desktop\GameProjects\GameProjects\trunk\GameWithStructures\obj\Debug\GameWithStructures.pdb
