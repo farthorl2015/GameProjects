@@ -21,7 +21,7 @@ class SpaceInvaders
 	const char EnemySymbol = '@'; // looks the angriest
 	const char ShotSymbol = '|'; // just random shots
 
-	static readonly ConsoleColor Blue = ConsoleColor.Blue;
+	const ConsoleColor Blue = ConsoleColor.Blue;
 
 	//Level details
 	static int pauseDivider = 16; //changing count of enemies depending on level;
@@ -34,11 +34,11 @@ class SpaceInvaders
 
 	static Random generator = new Random(); // this is the generator for the starting position of the enemies.
 
-	static bool wonLevel = false;
+	static bool wonLevel;
 	//bool values for wining game and level;
 
-	static int sleepingParameter = 100;
-	static bool enemiesAreFrozen = false;
+	static int sleepTime = 100;
+	static bool enemiesAreFrozen;
 
 
 	static void Main()
@@ -124,7 +124,7 @@ class SpaceInvaders
 				Collision();
 			}
 
-			Thread.Sleep(sleepingParameter);
+			Thread.Sleep(sleepTime);
 			Console.Clear();
 			// Redrawing
 			DrawField();
@@ -183,7 +183,7 @@ class SpaceInvaders
 		playerPositionX = FieldWidth / 2;
 		playerPositionY = MaxHeight - 2;
 		pauseDivider -= 2;
-		sleepingParameter -= 10;
+		sleepTime -= 10;
 		lives++;
 	}
 
@@ -335,25 +335,23 @@ class SpaceInvaders
 	}
 	static void SpawnEnemies(bool frozen)
 	{
-		if (!frozen)
-		{
-			if (pause % pauseDivider == 0)
-			{
-				int spawningWidth = generator.Next(0, FieldWidth);
-				int spawningHeight = generator.Next(0, MaxHeight / 6);
-				enemies.Add(new[] { spawningWidth, spawningHeight });
-				pause = 0;
-			}
-			pause++;
-		}
+		if (frozen) return;
 
+		if (pause % pauseDivider == 0)
+		{
+			int spawningWidth = generator.Next(0, FieldWidth);
+			int spawningHeight = generator.Next(0, MaxHeight / 6);
+			enemies.Add(new[] { spawningWidth, spawningHeight });
+			pause = 0;
+		}
+		pause++;
 	}
 	static ThreadStart Freeze()
 	{
 		ThreadStart freeze = () =>
 		{
 			Stopwatch sb = new Stopwatch();
-			int millisecondsOfFreeze = 4000;
+			const int millisecondsOfFreeze = 4000;
 			sb.Start();
 			while (sb.ElapsedMilliseconds < millisecondsOfFreeze)
 			{
@@ -371,10 +369,9 @@ class SpaceInvaders
 		int x = MaxWidth / 5;
 		using (file)
 		{
-			string line;
 			while (true)
 			{
-				line = file.ReadLine();
+				var line = file.ReadLine();
 				if (string.IsNullOrEmpty(line))
 				{
 					break;
