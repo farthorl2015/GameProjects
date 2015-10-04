@@ -17,9 +17,11 @@ class SpaceInvaders
 	static List<int[]> enemies = new List<int[]>(); // the enemies and shots are List because this list holds all the enemies and shots currently on the field so they can drawn. Each enemy and object consists of PositionX and PositionY that is why they are saved in List from int array.
 	static List<int[]> shots = new List<int[]>();
 
-	static char playerSymbol = 'W'; // it looks the most as a spaceship to me
-	static char enemySymbol = '@'; // looks the angriest
-	static char shotSymbol = '|'; // just random shots
+	const char playerSymbol = 'W'; // it looks the most as a spaceship to me
+	const char enemySymbol = '@'; // looks the angriest
+	const char shotSymbol = '|'; // just random shots
+
+	static readonly ConsoleColor Blue = ConsoleColor.Blue;
 
 	//Level details
 	static int PauseDivider = 16;//changing count of enemies depending on level;
@@ -156,7 +158,7 @@ class SpaceInvaders
 			Environment.Exit(0);
 		}
 
-		PrintStringAtCoordinates(20, 12, ConsoleColor.Blue, "PRESS ENTER TO GO TO THE NEXT LEVEL");
+		PrintStringAtCoordinates(20, 12, Blue, "PRESS ENTER TO GO TO THE NEXT LEVEL");
 		var keyPressed = Console.ReadKey();
 		while (true)
 		{
@@ -187,10 +189,10 @@ class SpaceInvaders
 
 	static void DrawResultTable()
 	{
-		PrintStringAtCoordinates(20, 4, ConsoleColor.Blue, "SPACE INVADERS");
-		PrintStringAtCoordinates(20, 6, ConsoleColor.Blue, $"Lives: {lives}");
-		PrintStringAtCoordinates(20, 7, ConsoleColor.Blue, $"Level: {level}");
-		PrintStringAtCoordinates(20, 8, ConsoleColor.Blue, $"Next level after {scoresToWin - winnedScoresInLevel} enemies kills");
+		PrintStringAtCoordinates(20, 4, Blue, "SPACE INVADERS");
+		PrintStringAtCoordinates(20, 6, Blue, $"Lives: {lives}");
+		PrintStringAtCoordinates(20, 7, Blue, $"Level: {level}");
+		PrintStringAtCoordinates(20, 8, Blue, $"Next level after {scoresToWin - winnedScoresInLevel} enemies kills");
 
 	}
 	static void UpdatingShotPosition()
@@ -281,7 +283,7 @@ class SpaceInvaders
 	{
 		for (int i = 1; i < MaxHeight - 2; i++)
 		{
-			DrawAtCoordinates(new int[] { FieldWidth + 1, i }, ConsoleColor.Blue, '|');
+			DrawAtCoordinates(new int[] { FieldWidth + 1, i }, Blue, '|');
 		}
 	}
 
@@ -297,7 +299,7 @@ class SpaceInvaders
 	static void DrawPlayer()
 	{
 		int[] playerPosition = { PlayerPositionX, PlayerPositionY };
-		ConsoleColor playerColor = ConsoleColor.Blue;
+		ConsoleColor playerColor = Blue;
 		DrawAtCoordinates(playerPosition, playerColor, playerSymbol);
 	}
 
