@@ -35,7 +35,7 @@ class SpaceInvaders
 	static Random generator = new Random(); // this is the generator for the starting position of the enemies.
 
 	static bool wonLevel;
-	//bool values for wining game and level;
+	//bool values for winning game and level;
 
 	static int sleepTime = 100;
 	static bool enemiesAreFrozen;
@@ -67,51 +67,64 @@ class SpaceInvaders
 			{
 				var keyPressed = Console.ReadKey(true);
 
-				while (Console.KeyAvailable) //cleans read key buffer when a lot of keys are pressed
+				while (Console.KeyAvailable) // cleans read key buffer when a lot of keys are pressed
 				{
 					Console.ReadKey(true);
 				}
 
-				if (keyPressed.Key == ConsoleKey.RightArrow || keyPressed.Key == ConsoleKey.D)
+				switch (keyPressed.Key)
 				{
-					if (playerPositionX < FieldWidth)
-					{
-						playerPositionX++;
-					}
-				}
-				else if (keyPressed.Key == ConsoleKey.LeftArrow || keyPressed.Key == ConsoleKey.A)
-				{
-					if (playerPositionX > 0)
-					{
-						playerPositionX--;
-					}
-				}
-				else if (keyPressed.Key == ConsoleKey.DownArrow || keyPressed.Key == ConsoleKey.S)
-				{
-					if (playerPositionY < MaxHeight - 2)
-					{
-						playerPositionY++;
-					}
-				}
-				else if (keyPressed.Key == ConsoleKey.UpArrow || keyPressed.Key == ConsoleKey.W)
-				{
-					if (playerPositionY > 1)
-					{
-						playerPositionY--;
-					}
-				}
-				else if (keyPressed.Key == ConsoleKey.Spacebar)
-				{
-					shots.Add(new[] { playerPositionX, playerPositionY });
-				}
-				else if (keyPressed.Key == ConsoleKey.NumPad0)
-				{
-					if (!frozenUsed)
-					{
-						Thread freeze = new Thread(Freeze());
-						freeze.Start();
-					}
-					frozenUsed = true;
+					case ConsoleKey.RightArrow:
+					case ConsoleKey.D:
+
+						if (playerPositionX < FieldWidth)
+						{
+							playerPositionX++;
+						}
+						break;
+
+					case ConsoleKey.LeftArrow:
+					case ConsoleKey.A:
+
+						if (playerPositionX > 0)
+						{
+							playerPositionX--;
+						}
+						break;
+
+					case ConsoleKey.DownArrow:
+					case ConsoleKey.S:
+
+						if (playerPositionY < MaxHeight - 2)
+						{
+							playerPositionY++;
+						}
+						break;
+
+					case ConsoleKey.UpArrow:
+					case ConsoleKey.W:
+
+						if (playerPositionY > 1)
+						{
+							playerPositionY--;
+						}
+						break;
+
+					case ConsoleKey.Spacebar:
+
+						shots.Add(new[] { playerPositionX, playerPositionY });
+						break;
+
+					case ConsoleKey.NumPad0:
+
+						if (!frozenUsed)
+						{
+							Thread freeze = new Thread(Freeze());
+							freeze.Start();
+						}
+
+						frozenUsed = true;
+						break;
 				}
 			}
 
