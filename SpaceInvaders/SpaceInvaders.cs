@@ -26,8 +26,8 @@ class SpaceInvaders
 	//Level details
 	static int pauseDivider = 16; //changing count of enemies depending on level;
 	static int lives = 3;
-	static int pause; // here I am adjusting the enemies being spawn because there were too many.
-	static int winnedScoresInLevel;//counting points at each level
+	static int pause; // here I am adjusting the enemies being spawned because there were too many.
+	static int winnedScoresInLevel; // counting points at each level
 	static int scoresToWin = 10;// the count of scores that are needed to go to next level
 	static int level;
 	static int numberOfLevels = 3;
@@ -48,12 +48,8 @@ class SpaceInvaders
 		Console.BufferHeight = Console.WindowHeight = MaxHeight;
 		Console.BufferWidth = Console.WindowWidth = MaxWidth;
 
-		//Console.WriteLine("Press enter to begin");
 		PlayingLevel();// using param level as flag to change difficulty;
 	}
-
-
-
 
 	static void PlayingLevel()
 	{
