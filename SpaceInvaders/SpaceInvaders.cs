@@ -47,6 +47,8 @@ class SpaceInvaders
 													  // I set the size of the Console it can be changed easily from the constants above
 		Console.BufferHeight = Console.WindowHeight = MaxHeight;
 		Console.BufferWidth = Console.WindowWidth = MaxWidth;
+
+		//Console.WriteLine("Press enter to begin");
 		PlayingLevel();// using param level as flag to change difficulty;
 	}
 
