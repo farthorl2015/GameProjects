@@ -14,4 +14,10 @@
                                                   *
                       * 
         *                                 *
-              Press Enter key to begin!
+		  Controls:
+		  Arrow keys	Move
+		  Space		Shoot
+		  Num 0		Enemies frozen for 4s (one use!)
+			
+			
+		  Press Enter key to begin!

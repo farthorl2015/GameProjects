@@ -21,7 +21,7 @@ class SpaceInvaders
 	const char EnemySymbol = '@';
 	const char ShotSymbol = '|';
 
-	const ConsoleColor Blue = ConsoleColor.Blue;
+	const ConsoleColor Green = ConsoleColor.Green;
 
 	// Level details
 	static int pauseDivider = 16; //changing count of enemies depending on level;
@@ -56,16 +56,17 @@ class SpaceInvaders
 		// Line 01-06: Stars
 		// Line 07-09: Start screen art
 		// Line 10-16: stars
-		// Line 17   : Start Message
+		// Line 17-20: controls
+		// Line 23	 : start message
 
 		int padding = 7;
 		Console.CursorVisible = false;
 
-		Console.Write(new string('\n', 4)); // 4 lines of padding so the stars don't feel glued to the top
+		Console.Write(new string('\n', 4)); // 4 lines of p adding so the stars don't feel glued to the top
 
 		using (var file = new StreamReader(@"..\..\msg_startscreen.txt")) // print start screen
 		{
-			for (int line = 1; line <= 17; line++)
+			for (int line = 1; line <= 23; line++)
 			{
 				if (line < 7 || (line > 9 && line <= 16)) // draw stars with yellow color
 				{
@@ -97,7 +98,7 @@ class SpaceInvaders
 
 		while (lives > 0)
 		{
-			ReadPlayerMovement();
+			ReadPlayerInput();
 
 			if (syncTimer.ElapsedMilliseconds % (timestep - (level * 10)) == 0) // difficulty rises as level rises
 			{
@@ -120,12 +121,13 @@ class SpaceInvaders
 				// Redrawing
 				DrawField();
 			}
+
 			CheckLevelStatus();
 		}
 
 		WriteLabel(new StreamReader(@"..\..\msg_game_over.txt"));
 
-		Console.ReadLine();
+		Console.ReadKey();
 		Environment.Exit(0);
 	}
 
@@ -140,7 +142,7 @@ class SpaceInvaders
 		}
 	}
 
-	static void ReadPlayerMovement()
+	static void ReadPlayerInput()
 	{
 		while (Console.KeyAvailable)
 		{
@@ -210,7 +212,6 @@ class SpaceInvaders
 
 	static void GoToNextLevel()
 	{
-
 		if (level > numberOfLevels)
 		{
 
@@ -227,7 +228,7 @@ class SpaceInvaders
 			Environment.Exit(0);
 		}
 
-		PrintStringAtCoordinates(20, 12, Blue, "PRESS ENTER TO GO TO THE NEXT LEVEL");
+		PrintStringAtCoordinates(20, 12, Green, "PRESS ENTER TO GO TO THE NEXT LEVEL");
 		while (true)
 		{
 			var keyPressed = Console.ReadKey();
@@ -256,10 +257,10 @@ class SpaceInvaders
 
 	static void DrawResultTable()
 	{
-		PrintStringAtCoordinates(20, 4, Blue, "SOFTUNI INVADERS");
-		PrintStringAtCoordinates(20, 6, Blue, string.Format("Lives: {0}", lives));
-		PrintStringAtCoordinates(20, 7, Blue, string.Format("Level: {0}", level));
-		PrintStringAtCoordinates(20, 8, Blue, string.Format("Next level after {0} enemies kills", scoresToWin - winnedScoresInLevel));
+		PrintStringAtCoordinates(20, 4, Green, "SOFTUNI INVADERS");
+		PrintStringAtCoordinates(20, 6, Green, string.Format("Lives: {0}", lives));
+		PrintStringAtCoordinates(20, 7, Green, string.Format("Level: {0}", level));
+		PrintStringAtCoordinates(20, 8, Green, string.Format("Next level after {0} enemies kills", scoresToWin - winnedScoresInLevel));
 
 	}
 	static void UpdateShotPosition()
@@ -325,8 +326,9 @@ class SpaceInvaders
 				enemiesToRemove.Add(theEnemyCollidedWithAShot);
 				shotsToRemove.Add(i);
 				winnedScoresInLevel++;
-			}
 
+				new Thread(() => Console.Beep(300, 100)).Start();
+			}
 		}
 	}
 
@@ -339,6 +341,7 @@ class SpaceInvaders
 				lives--;
 				DrawAtCoordinates(new[] { enemies[index][0], enemies[index][1] }, ConsoleColor.DarkRed, 'X');
 				enemiesToRemove.Add(index);
+				new Thread(() => Console.Beep(100, 100)).Start();
 			}
 
 		}
@@ -348,7 +351,7 @@ class SpaceInvaders
 	{
 		for (int i = 1; i < MaxHeight - 2; i++)
 		{
-			DrawAtCoordinates(new[] { FieldWidth + 1, i }, Blue, '|');
+			DrawAtCoordinates(new[] { FieldWidth + 1, i }, Green, '|');
 		}
 	}
 
@@ -364,7 +367,7 @@ class SpaceInvaders
 	static void DrawPlayer()
 	{
 		int[] playerPosition = { playerPositionX, playerPositionY };
-		ConsoleColor playerColor = Blue;
+		ConsoleColor playerColor = Green;
 		DrawAtCoordinates(playerPosition, playerColor, PlayerSymbol);
 	}
 
