@@ -37,7 +37,7 @@ class SpaceInvaders
 	static bool wonLevel;
 	//bool values for winning game and level;
 
-	static int sleepTime = 100;
+	static int sleepTime = 90;
 	static bool enemiesAreFrozen;
 
 
@@ -198,9 +198,9 @@ class SpaceInvaders
 	static void DrawResultTable()
 	{
 		PrintStringAtCoordinates(20, 4, Blue, "SPACE INVADERS");
-		PrintStringAtCoordinates(20, 6, Blue, $"Lives: {lives}");
-		PrintStringAtCoordinates(20, 7, Blue, $"Level: {level}");
-        PrintStringAtCoordinates(20, 8, Blue, $"Next level after {scoresToWin - winnedScoresInLevel} enemies kills");
+		PrintStringAtCoordinates(20, 6, Blue, string.Format("Lives: {0}", lives));
+		PrintStringAtCoordinates(20, 7, Blue, string.Format("Level: {0}", level));
+        PrintStringAtCoordinates(20, 8, Blue, string.Format("Next level after {0} enemies kills", scoresToWin - winnedScoresInLevel));
 
 	}
 	static void UpdatingShotPosition()
