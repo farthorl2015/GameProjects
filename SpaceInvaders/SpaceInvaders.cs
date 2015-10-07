@@ -23,30 +23,72 @@ class SpaceInvaders
 
 	const ConsoleColor Blue = ConsoleColor.Blue;
 
-	//Level details
+	// Level details
 	static int pauseDivider = 16; //changing count of enemies depending on level;
 	static int lives = 3;
 	static int pause; // Adjustment of enemies being spawned
 	static int winnedScoresInLevel; // counting points at each level
 	static int scoresToWin = 10; // the count of scores that are needed to go to next level
-	static int level;
+	static int level = 1;
 	static int numberOfLevels = 3;
 
-	static Random generator = new Random(); // this is the generator for the starting position of the enemies.
+	static Random generator = new Random(); // This is the generator for the starting position of the enemies.
 
 	static bool wonLevel;
-	static int timestep = 90; // Timestep in milliseconds. Determines how fast the enemies fall down.
+	static int timestep = 100; // Timestep in milliseconds. Determines how fast the enemies fall down.
 	static bool frozenUsed;
 	static bool enemiesAreFrozen;
 
 
 	static void Main()
 	{
-		Console.Title = "!---> Space Invaders <---!";
+		Console.Title = "!---> SoftUni Invaders <---!";
 		Console.BufferHeight = Console.WindowHeight = MaxHeight;
 		Console.BufferWidth = Console.WindowWidth = MaxWidth;
 
+		DisplayStartScreen();
 		PlayingLevel();
+	}
+
+	static void DisplayStartScreen()
+	{
+		// msg_startscreen.txt map:
+		// Line 01-06: Stars
+		// Line 07-09: Start screen art
+		// Line 10-16: stars
+		// Line 17   : Start Message
+
+		int padding = 7;
+		Console.CursorVisible = false;
+
+		Console.Write(new string('\n', 4)); // 4 lines of padding so the stars don't feel glued to the top
+
+		using (var file = new StreamReader(@"..\..\msg_startscreen.txt")) // print start screen
+		{
+			for (int line = 1; line <= 17; line++)
+			{
+				if (line < 7 || (line > 9 && line <= 16)) // draw stars with yellow color
+				{
+					Console.ForegroundColor = ConsoleColor.Yellow;
+				}
+				else if (line <= 9)
+				{
+					Console.ForegroundColor = ConsoleColor.White; // draw text with white
+				}
+				else
+				{
+					Console.ForegroundColor = ConsoleColor.Red; // draw start text with red
+				}
+
+				Console.WriteLine(new string(' ', padding) + file.ReadLine());
+			}
+		}
+
+		ConsoleKeyInfo keyPressed = Console.ReadKey(true);
+		while (keyPressed.Key != ConsoleKey.Enter)
+		{
+			keyPressed = Console.ReadKey(true);
+		}
 	}
 
 	static void PlayingLevel()
@@ -57,14 +99,13 @@ class SpaceInvaders
 		{
 			ReadPlayerMovement();
 
-			if (syncTimer.ElapsedMilliseconds % (timestep - (level*5)) == 0) // difficulty rises as level rises
+			if (syncTimer.ElapsedMilliseconds % (timestep - (level * 10)) == 0) // difficulty rises as level rises
 			{
 				// Draw
 				SpawnEnemies(enemiesAreFrozen);
 				DrawField();
 
 				// Logic
-
 				UpdateShotPosition();
 				Collision();
 
@@ -73,13 +114,13 @@ class SpaceInvaders
 					UpdatingEnemyPosition();
 					Collision();
 				}
-				//Thread.Sleep(sleepTime);
+
 				Console.Clear();
 
 				// Redrawing
 				DrawField();
 			}
-			LevelStatus();
+			CheckLevelStatus();
 		}
 
 		WriteLabel(new StreamReader(@"..\..\msg_game_over.txt"));
@@ -88,7 +129,7 @@ class SpaceInvaders
 		Environment.Exit(0);
 	}
 
-	static void LevelStatus()
+	static void CheckLevelStatus()
 	{
 		wonLevel = winnedScoresInLevel >= scoresToWin;
 
@@ -175,6 +216,13 @@ class SpaceInvaders
 
 			WriteLabel(new StreamReader(@"..\..\msg_you_won.txt"));
 
+			Console.ForegroundColor = ConsoleColor.Gray;
+			string credits = "SoftUni Team Farthorl 2015 credits:";
+            Console.SetCursorPosition(1, Console.BufferHeight-1);
+
+			Console.WriteLine(credits);
+			Console.WriteLine(" bacuty, Nezhdetov, Simooo93, Housey, krisitown, zhecho15");
+
 			Console.ReadLine();
 			Environment.Exit(0);
 		}
@@ -208,7 +256,7 @@ class SpaceInvaders
 
 	static void DrawResultTable()
 	{
-		PrintStringAtCoordinates(20, 4, Blue, "SPACE INVADERS");
+		PrintStringAtCoordinates(20, 4, Blue, "SOFTUNI INVADERS");
 		PrintStringAtCoordinates(20, 6, Blue, string.Format("Lives: {0}", lives));
 		PrintStringAtCoordinates(20, 7, Blue, string.Format("Level: {0}", level));
 		PrintStringAtCoordinates(20, 8, Blue, string.Format("Next level after {0} enemies kills", scoresToWin - winnedScoresInLevel));
@@ -296,9 +344,6 @@ class SpaceInvaders
 		}
 	}
 
-
-
-
 	static void FieldBarrier()
 	{
 		for (int i = 1; i < MaxHeight - 2; i++)
@@ -327,7 +372,7 @@ class SpaceInvaders
 	{
 		foreach (var shot in shots)
 		{
-			DrawAtCoordinates(new[] { shot[0], shot[1] }, ConsoleColor.Red, ShotSymbol);
+			DrawAtCoordinates(new[] { shot[0], shot[1] }, ConsoleColor.Yellow, ShotSymbol);
 		}
 	}
 
